@@ -6,19 +6,22 @@ on:
     types:
       - completed
   workflow_dispatch:
+
 jobs:
   deploy-ec2:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
- steps:
-    - uses: actions/checkout@v4
-- name: Deploy to EC2
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ec2-user
-        key: ${{ secrets.EC2_KEY }}
-        script: |
-          cd /home/ec2-user/dice
-          git pull origin AWS
-          sudo systemctl restart diceapp
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            cd /home/ec2-user/dice
+            git pull origin AWS
+            sudo systemctl restart diceapp
