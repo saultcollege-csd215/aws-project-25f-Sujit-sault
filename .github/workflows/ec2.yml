@@ -1,25 +1,23 @@
-name: Deploy to EC2
+name: EC2 Deployment
 
 on:
-  workflow_run:
-    workflows: [Test]
-    types: [completed]
   workflow_dispatch:
 
 jobs:
   deploy-ec2:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
       
-      - name: Deploy to EC2
-        uses: appleboy/ssh-action@v1.0.3
+      - name: SSH into EC2 instance and run deploy script
+        uses: appleboy/ssh-action@v1
         with:
-          host: ${{ secrets.EC2_HOST }}
+          host: 10.0.0.181
           username: ec2-user
           key: ${{ secrets.EC2_KEY }}
-          script: |
+          script_path: resources/deploy_ec2.sh
             cd /home/ec2-user/dice
             git pull origin AWS
             sudo systemctl restart diceapp

@@ -3,24 +3,38 @@ name: Test
 on:
   workflow_dispatch:
   push:
-    branches: [AWS]
+    branches: AWS
 
 jobs:
   test:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v6
         with:
           python-version: '3.9'
 
       - name: Install dependencies
         run: |
           pip install -r app/requirements_flask.txt
-          pip install pytest boto3 moto
+         
 
       - name: Run tests
-        run: pytest tests/
+        run: pytest tests
+
+      - name: Deploy Lambda app
+        uses: benc-uk/workflow-dispatch@v1.2.4
+        with: 
+          workflow: 'lambda.yml'
+
+      - name: Deploy EC2 app
+        uses: benc-uk/workflow-dispatch@v1.2.4
+        with: 
+          workflow: 'ec2.yml'
+
+
+          
