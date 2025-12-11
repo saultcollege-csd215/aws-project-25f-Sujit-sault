@@ -14,10 +14,8 @@ jobs:
       - name: SSH into EC2 instance and run deploy script
         uses: appleboy/ssh-action@v1
         with:
-          host: 10.0.0.181
+          host: 3.239.149.234
           username: ec2-user
           key: ${{ secrets.EC2_KEY }}
           script_path: resources/deploy_ec2.sh
-            cd /home/ec2-user/dice
-            git pull origin AWS
-            sudo systemctl restart diceapp
+            
